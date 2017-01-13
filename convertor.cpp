@@ -16,9 +16,9 @@ void menu() {
     cout << " 6. Temperatura\n";
     cout << " 7. Masa\n";
     cout << " 8. Energie\n";
-    cout << " 9. Presiune (bar to psi)\n";
-    cout << "10.xDensitate\n";
-    cout << "11.xConsum combustibil (din l/100km in mile la galon si km la litru)\n";
+    cout << " 9. Presiune\n";
+    cout << "10. Densitate\n";
+    cout << "11. Consum combustibil\n";
     cout << "Alegeti o optiune: ";
 }
 
@@ -39,6 +39,7 @@ char* umTemp[] = {"C", "F"};
 char* umMasa[] = {"mg", "g", "kg"};
 char* umEnergie[] = {"J", "kJ", "mJ"};
 char* umPresiune[] = {"bar", "psi"};
+char* umDensitate[] = {"mgpm3", "gpm3", "kgpm3"};
 char* umConsum[] = {"gpmi", "gp100mi", "lpkm", "lp100km"};
 
 double convertLungime(double val, char umFrom[], char umTo[]) {
@@ -244,6 +245,31 @@ double convertPresiune(double val, char umFrom[], char umTo[]) {
     return -1;
 }
 
+double convertDensitate(double val, char umFrom[], char umTo[]) {
+    if (strcmp(umFrom, umTo) == 0) {
+        return val;
+    }
+    int idxFrom = -1;
+    int idxTo = -1;
+    for (int i = 0; i < 3; i++) {
+        if (strcmp(umFrom, umDensitate[i]) == 0) {
+            idxFrom = i;
+        }
+        if (strcmp(umTo, umDensitate[i]) == 0) {
+            idxTo = i;
+        }
+    }
+    if ((idxFrom == -1) || (idxTo == -1)) {
+        cout << "Unitate de masura invalida!";
+        return -1;
+    }
+    if (idxFrom > idxTo) {
+        return val * tabel[idxFrom][idxTo];
+    } else {
+        return val / tabel[idxFrom][idxTo];
+    }
+}
+
 double convertConsum(double val, char umFrom[], char umTo[]) {
     if (strcmp(umFrom, umTo) == 0) {
         return val;
@@ -268,7 +294,7 @@ double convertConsum(double val, char umFrom[], char umTo[]) {
 int main() {
     int option;
 
-    double val[10];
+    double val;
     char umFrom[10], umTo[10];
     char dummy[10];
 
@@ -288,90 +314,99 @@ int main() {
             for (int i = 0; i < 3; i++) {
                 cout << umLungime[i] << " ";
             }
-            cout << "\nIntroduceti expresia pentru convertit (ex: 5 m = ? mm): ";
-            cin >> val[0] >> umFrom >> dummy >> dummy >> umTo;
-            cout  << std::fixed << convertLungime(val[0], umFrom, umTo) << " " << umTo << "\n";
+            cout << "\nIntroduceti expresia pentru convertit (5 m = ? mm): ";
+            cin >> val >> umFrom >> dummy >> dummy >> umTo;
+            cout  << std::fixed << convertLungime(val, umFrom, umTo) << "\n";
             break;
         case 2:
             cout << "\nUnitati masura: ";
             for (int i = 0; i <= 3; i++) {
                 cout << umArie[i] << " ";
             }
-            cout << "\nIntroduceti expresia pentru convertit (ex: 5 m2 = ? mm2): ";
-            cin >> val[0] >> umFrom >> dummy >> dummy >> umTo;
-            cout  << std::fixed << convertArie(val[0], umFrom, umTo) << " " << umTo << "\n";
+            cout << "\nIntroduceti expresia pentru convertit (5 m2 = ? mm2): ";
+            cin >> val >> umFrom >> dummy >> dummy >> umTo;
+            cout  << std::fixed << convertArie(val, umFrom, umTo) << "\n";
             break;
         case 3:
             cout << "\nUnitati masura: ";
             for (int i = 0; i < 3; i++) {
                 cout << umVolum[i] << " ";
             }
-            cout << "\nIntroduceti expresia pentru convertit (ex: 5 m3 = ? mm3): ";
-            cin >> val[0] >> umFrom >> dummy >> dummy >> umTo;
-            cout  << std::fixed << convertVolum(val[0], umFrom, umTo) << " " << umTo << "\n";
+            cout << "\nIntroduceti expresia pentru convertit (5 m3 = ? mm3): ";
+            cin >> val >> umFrom >> dummy >> dummy >> umTo;
+            cout  << std::fixed << convertVolum(val, umFrom, umTo) << "\n";
             break;
         case 4:
             cout << "\nUnitati masura: ";
             for (int i = 0; i < 3; i++) {
                 cout << umTimp[i] << " ";
             }
-            cout << "\nIntroduceti expresia pentru convertit (ex: 5 m = ? s): ";
-            cin >> val[0] >> umFrom >> dummy >> dummy >> umTo;
-            cout  << std::fixed << convertTimp(val[0], umFrom, umTo) << " " << umTo << "\n";
+            cout << "\nIntroduceti expresia pentru convertit (5 m = ? s): ";
+            cin >> val >> umFrom >> dummy >> dummy >> umTo;
+            cout  << std::fixed << convertTimp(val, umFrom, umTo) << "\n";
             break;
         case 5:
             cout << "\nUnitati masura: ";
             for (int i = 0; i < 3; i++) {
                 cout << umViteza[i] << " ";
             }
-            cout << "\nIntroduceti expresia pentru convertit (ex: 5 mph = ? mps): ";
-            cin >> val[0] >> umFrom >> dummy >> dummy >> umTo;
-            cout  << std::fixed << convertViteza(val[0], umFrom, umTo) << " " << umTo << "\n";
+            cout << "\nIntroduceti expresia pentru convertit (5 mph = ? mps): ";
+            cin >> val >> umFrom >> dummy >> dummy >> umTo;
+            cout  << std::fixed << convertViteza(val, umFrom, umTo) << "\n";
             break;
         case 6:
             cout << "\nUnitati masura: ";
             for (int i = 0; i < 2; i++) {
                 cout << umTemp[i] << " ";
             }
-            cout << "\nIntroduceti expresia pentru convertit (ex: 5 C = ? F): ";
-            cin >> val[0] >> umFrom >> dummy >> dummy >> umTo;
-            cout  << std::fixed << convertTemp(val[0], umFrom, umTo) << " " << umTo << "\n";
+            cout << "\nIntroduceti expresia pentru convertit (5 C = ? F): ";
+            cin >> val >> umFrom >> dummy >> dummy >> umTo;
+            cout  << std::fixed << convertTemp(val, umFrom, umTo) << "\n";
             break;
         case 7:
             cout << "\nUnitati masura: ";
             for (int i = 0; i < 3; i++) {
                 cout << umMasa[i] << " ";
             }
-            cout << "\nIntroduceti expresia pentru convertit (ex: 5 mg = ? g): ";
-            cin >> val[0] >> umFrom >> dummy >> dummy >> umTo;
-            cout  << std::fixed << convertMasa(val[0], umFrom, umTo) << " " << umTo << "\n";
+            cout << "\nIntroduceti expresia pentru convertit (5 mg = ? g): ";
+            cin >> val >> umFrom >> dummy >> dummy >> umTo;
+            cout  << std::fixed << convertMasa(val, umFrom, umTo) << "\n";
             break;
         case 8:
             cout << "\nUnitati masura: ";
             for (int i = 0; i < 3; i++) {
                 cout << umEnergie[i] << " ";
             }
-            cout << "\nIntroduceti expresia pentru convertit (ex: 5 kJ = ? J): ";
-            cin >> val[0] >> umFrom >> dummy >> dummy >> umTo;
-            cout  << std::fixed << convertEnergie(val[0], umFrom, umTo) << " " << umTo << "\n";
+            cout << "\nIntroduceti expresia pentru convertit (5 kJ = ? J): ";
+            cin >> val >> umFrom >> dummy >> dummy >> umTo;
+            cout  << std::fixed << convertEnergie(val, umFrom, umTo) << "\n";
             break;
         case 9:
             cout << "\nUnitati masura: ";
             for (int i = 0; i < 2; i++) {
                 cout << umPresiune[i] << " ";
             }
-            cout << "\nIntroduceti expresia pentru convertit (ex: 5 bar = ? psi): ";
-            cin >> val[0] >> umFrom >> dummy >> dummy >> umTo;
-            cout  << std::fixed << convertPresiune(val[0], umFrom, umTo) << " " << umTo << "\n";
+            cout << "\nIntroduceti expresia pentru convertit (5 bar = ? psi): ";
+            cin >> val >> umFrom >> dummy >> dummy >> umTo;
+            cout  << std::fixed << convertPresiune(val, umFrom, umTo) << "\n";
+            break;
+        case 10:
+            cout << "\nUnitati masura: ";
+            for (int i = 0; i < 3; i++) {
+                cout << umDensitate[i] << " ";
+            }
+            cout << "\nIntroduceti expresia pentru convertit (5 gpm3 = ? mgpm3): ";
+            cin >> val >> umFrom >> dummy >> dummy >> umTo;
+            cout  << std::fixed << convertDensitate(val, umFrom, umTo) << "\n";
             break;
         case 11:
             cout << "\nUnitati masura: ";
             for (int i = 0; i < 4; i++) {
                 cout << umConsum[i] << " ";
             }
-            cout << "\nIntroduceti expresia pentru convertit (ex: 5 gp100mi = ? lp100km): ";
-            cin >> val[0] >> umFrom >> dummy >> dummy >> umTo;
-            cout  << std::fixed << convertConsum(val[0], umFrom, umTo) << " " << umTo << "\n";
+            cout << "\nIntroduceti expresia pentru convertit (5 gp100mi = ? lp100km): ";
+            cin >> val >> umFrom >> dummy >> dummy >> umTo;
+            cout  << std::fixed << convertConsum(val, umFrom, umTo) << "\n";
             break;
         default:
             cout << "Optiune invalida!\n";
